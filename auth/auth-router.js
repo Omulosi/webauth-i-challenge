@@ -10,22 +10,15 @@ router.post('/login', (req, res) => {
   let {username, email, password} = req.body;
 
   if (!(username && email && password)) {
-    res.status(401).json({error: 'Please provide username, email and password'})
+    res.status(400).json({error: 'Please provide username, email and password'})
   }
-
-  console.log('##################################');
-  console.log(username);
-  console.log(email);
-  console.log(password);
-  console.log('##################################');
 
   User.findBy({ username })
     .then(user => {
-      console.log('========>', user)
       if (user && bcrypt.compareSync(password, user.password)) {
         res.status(200).json({message: `Welcome ${user.username}!`});
       } else {
-        res.status(401).json({message: 'Invalid credentials'});
+        res.status(400).json({message: 'Invalid credentials'});
       }
     })
     .catch(err => {
